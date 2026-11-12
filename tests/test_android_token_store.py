@@ -1,9 +1,9 @@
-import sys
+﻿import sys
 from types import SimpleNamespace
 
 import pytest
 
-import android_token_store
+import app.core.android_token_store as android_token_store
 
 
 @pytest.fixture
@@ -62,3 +62,6 @@ def test_delete_token_calls_android_vault(fake_android):
     android_token_store.delete_token()
 
     assert vault.deleted is activity
+
+
+

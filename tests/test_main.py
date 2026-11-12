@@ -1,12 +1,12 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
 from requests import HTTPError, RequestException
 
-import session_storage
+import app.core.session_storage as session_storage
 from main import FoodApp
-from session_storage import load_refresh_token, save_refresh_token
+from app.core.session_storage import load_refresh_token, save_refresh_token
 
 
 @pytest.fixture
@@ -540,3 +540,6 @@ def test_clearing_food_list_clears_previous_dish(app):
 
     assert app.selected_food is None
     assert app.result.text == ""
+
+
+

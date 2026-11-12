@@ -1,11 +1,11 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 from kivy.uix.label import Label
 from requests import RequestException
 
 from food_lists_test_helpers import find_widget, make_app, screen
-from ui_components import RoundedButton
+from app.ui.ui_components import RoundedButton
 
 
 def test_on_pre_enter_reloads_and_renders_lists(screen):
@@ -13,8 +13,8 @@ def test_on_pre_enter_reloads_and_renders_lists(screen):
     groups = [{"id": 9, "name": "Famiglia", "owner_id": "user-123"}]
 
     with (
-        patch("food_lists_screen.App.get_running_app", return_value=app),
-        patch("food_lists_screen.get_groups", return_value=groups),
+        patch("app.food.food_lists_screen.App.get_running_app", return_value=app),
+        patch("app.food.food_lists_screen.get_groups", return_value=groups),
         patch.object(screen, "render_lists") as mock_render,
     ):
         screen.selected_list_id = 4
@@ -32,7 +32,7 @@ def test_on_pre_enter_displays_loading_error(screen):
     app = make_app()
     app.reload_food_lists.side_effect = RequestException
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.on_pre_enter()
 
     assert screen.status_label.text == "Impossibile caricare le liste"
@@ -41,7 +41,7 @@ def test_on_pre_enter_displays_loading_error(screen):
 def test_render_lists_displays_empty_message(screen):
     app = make_app()
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.render_lists()
 
     message = find_widget(
@@ -62,7 +62,7 @@ def test_render_lists_marks_active_list_and_shows_selected_actions(screen):
     )
     screen.selected_list_id = 2
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.render_lists()
 
     button_texts = {
@@ -80,7 +80,7 @@ def test_clicking_rendered_list_selects_it(screen):
     food_list = {"id": 2, "name": "Cena"}
     app = make_app(food_lists=[food_list])
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.render_lists()
         button = find_widget(
             screen.list_container,
@@ -99,7 +99,7 @@ def test_select_list_collapses_list_that_is_already_selected(screen):
     screen.selected_list_id = 2
 
     with (
-        patch("food_lists_screen.App.get_running_app", return_value=app),
+        patch("app.food.food_lists_screen.App.get_running_app", return_value=app),
         patch.object(screen, "render_lists") as mock_render,
     ):
         screen.select_list(food_list)
@@ -114,7 +114,7 @@ def test_select_list_displays_error_when_foods_cannot_be_loaded(screen):
     app = make_app(food_lists=[food_list])
     app.select_food_list.side_effect = RequestException
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.select_list(food_list)
 
     assert screen.selected_list_id is None
@@ -131,7 +131,7 @@ def test_get_selected_list_returns_matching_list(screen):
     )
     screen.selected_list_id = 2
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         result = screen.get_selected_list()
 
     assert result == selected
@@ -140,7 +140,7 @@ def test_get_selected_list_returns_matching_list(screen):
 def test_get_selected_list_returns_none_without_selection(screen):
     app = make_app(food_lists=[{"id": 1, "name": "Pranzo"}])
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         result = screen.get_selected_list()
 
     assert result is None
@@ -149,7 +149,7 @@ def test_get_selected_list_returns_none_without_selection(screen):
 def test_open_selected_foods_does_nothing_without_selection(screen):
     with (
         patch.object(screen, "get_selected_list", return_value=None),
-        patch("food_lists_screen.show_food_popup") as mock_show,
+        patch("app.food.food_lists_screen.show_food_popup") as mock_show,
     ):
         screen.open_selected_foods(None)
 
@@ -165,8 +165,8 @@ def test_open_selected_foods_opens_food_popup(screen):
             "get_selected_list",
             return_value={"id": 1, "name": "Cena"},
         ),
-        patch("food_lists_screen.App.get_running_app", return_value=app),
-        patch("food_lists_screen.show_food_popup") as mock_show,
+        patch("app.food.food_lists_screen.App.get_running_app", return_value=app),
+        patch("app.food.food_lists_screen.show_food_popup") as mock_show,
     ):
         screen.open_selected_foods(None)
 
@@ -177,7 +177,7 @@ def test_go_home_from_menu_closes_menu_and_changes_screen(screen):
     app = make_app()
     screen.menu = SimpleNamespace(dismiss=Mock())
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.go_home_from_menu(None)
 
     screen.menu.dismiss.assert_called_once_with()
@@ -188,7 +188,7 @@ def test_logout_from_menu_closes_menu_and_logs_out(screen):
     app = make_app()
     screen.menu = SimpleNamespace(dismiss=Mock())
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.logout_from_menu(None)
 
     screen.menu.dismiss.assert_called_once_with()
@@ -201,7 +201,7 @@ def test_render_shared_list_for_owner(screen):
     screen.groups = [{"id": 9, "name": "Famiglia", "owner_id": "user-123"}]
     screen.selected_list_id = 2
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.render_lists()
 
     texts = {
@@ -220,7 +220,7 @@ def test_render_shared_list_for_member(screen):
     screen.groups = [{"id": 9, "name": "Famiglia", "owner_id": "other-user"}]
     screen.selected_list_id = 2
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.render_lists()
 
     texts = {
@@ -247,7 +247,7 @@ def test_get_group_for_list(screen):
 
 
 def test_open_members_popup_handles_missing_selection_or_group(screen):
-    with patch("food_lists_screen.show_group_members_popup") as show:
+    with patch("app.food.food_lists_screen.show_group_members_popup") as show:
         with patch.object(screen, "get_selected_list", return_value=None):
             screen.open_members_popup(None)
         show.assert_not_called()
@@ -274,7 +274,7 @@ def test_open_members_popup(screen):
     with (
         patch.object(screen, "get_selected_list", return_value=food_list),
         patch.object(screen, "get_group_for_list", return_value=group),
-        patch("food_lists_screen.show_group_members_popup") as show,
+        patch("app.food.food_lists_screen.show_group_members_popup") as show,
     ):
         screen.open_members_popup(None)
 
@@ -309,7 +309,7 @@ def test_render_lists_translates_actions_but_keeps_list_name(screen):
     screen.selected_list_id = 2
     screen.refresh_texts("en")
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.render_lists()
 
     texts = {
@@ -327,7 +327,7 @@ def test_empty_lists_message_is_translated(screen):
     app = make_app()
     screen.refresh_texts("en")
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.render_lists()
 
     find_widget(
@@ -341,7 +341,7 @@ def test_language_button_requests_change_from_app(screen):
     app = SimpleNamespace(language="it", set_language=Mock())
     screen.menu = SimpleNamespace(dismiss=Mock())
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.toggle_language(None)
 
     screen.menu.dismiss.assert_called_once_with()
@@ -353,7 +353,7 @@ def test_list_loading_error_is_translated_into_english(screen):
     app.reload_food_lists.side_effect = RequestException
     screen.refresh_texts("en")
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.on_pre_enter()
 
     assert screen.status_label.text == "Could not load lists"
@@ -365,7 +365,7 @@ def test_food_loading_error_is_translated_into_english(screen):
     app.select_food_list.side_effect = RequestException
     screen.refresh_texts("en")
 
-    with patch("food_lists_screen.App.get_running_app", return_value=app):
+    with patch("app.food.food_lists_screen.App.get_running_app", return_value=app):
         screen.select_list(food_list)
 
     assert screen.status_label.text == "Could not load foods"
@@ -395,3 +395,6 @@ def test_visible_error_changes_with_language(screen):
 
     screen.refresh_texts("it")
     assert screen.status_label.text == "Impossibile caricare i cibi"
+
+
+

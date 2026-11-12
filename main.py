@@ -12,20 +12,20 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.utils import platform
 from requests import HTTPError, RequestException
 
-from auth_client import refresh_session, sign_out
-from auth_screen import AuthScreen
-from food_lists_screen import FoodListsScreen
-from language_settings import load_language, save_language
-from recipe_popup import RecipePopup
-from session_storage import (
+from app.auth.auth_client import refresh_session, sign_out
+from app.auth.auth_screen import AuthScreen
+from app.food.food_lists_screen import FoodListsScreen
+from app.i18n.language_settings import load_language, save_language
+from app.recipes.recipe_popup import RecipePopup
+from app.core.session_storage import (
     clear_refresh_token,
     load_refresh_token,
     save_refresh_token,
 )
-from signup_screen import SignUpScreen
-from supabase_client import get_food_lists, get_foods
-from translations import translate
-from ui_components import MenuButton, RoundedButton
+from app.auth.signup_screen import SignUpScreen
+from app.core.supabase_client import get_food_lists, get_foods
+from app.i18n.translations import translate
+from app.ui.ui_components import MenuButton, RoundedButton
 
 
 if platform not in ("android", "ios"):

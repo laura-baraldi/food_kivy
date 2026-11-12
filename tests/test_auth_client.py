@@ -1,9 +1,9 @@
-from unittest.mock import Mock, patch
+﻿from unittest.mock import Mock, patch
 
 import pytest
 from requests import HTTPError
 
-from auth_client import (
+from app.auth.auth_client import (
     AUTH_BASE_URL,
     HEADERS,
     PASSWORD_RESET_REDIRECT_URL,
@@ -15,7 +15,7 @@ from auth_client import (
 )
 
 
-@patch("auth_client.requests.post")
+@patch("app.auth.auth_client.requests.post")
 def test_request_password_reset_sends_email(mock_post):
     mock_response = Mock()
     mock_post.return_value = mock_response
@@ -35,7 +35,7 @@ def test_request_password_reset_sends_email(mock_post):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("auth_client.requests.post")
+@patch("app.auth.auth_client.requests.post")
 def test_sign_up_sends_credentials(mock_post):
     mock_response = Mock()
     mock_response.json.return_value = {
@@ -69,7 +69,7 @@ def test_sign_up_sends_credentials(mock_post):
     }
 
 
-@patch("auth_client.requests.post")
+@patch("app.auth.auth_client.requests.post")
 def test_sign_in_sends_credentials(mock_post):
     mock_response = Mock()
     mock_response.json.return_value = {
@@ -104,7 +104,7 @@ def test_sign_in_sends_credentials(mock_post):
     }
 
 
-@patch("auth_client.requests.post")
+@patch("app.auth.auth_client.requests.post")
 def test_sign_in_raises_http_error(mock_post):
     mock_response = Mock()
     mock_response.status_code = 400
@@ -126,7 +126,7 @@ def test_sign_in_raises_http_error(mock_post):
     assert error.value.response.status_code == 400
 
 
-@patch("auth_client.requests.post")
+@patch("app.auth.auth_client.requests.post")
 def test_sign_out_sends_access_token(mock_post):
     mock_response = Mock()
     mock_post.return_value = mock_response
@@ -145,7 +145,7 @@ def test_sign_out_sends_access_token(mock_post):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("auth_client.requests.post")
+@patch("app.auth.auth_client.requests.post")
 def test_refresh_session_exchanges_refresh_token(mock_post):
     new_session = {
         "access_token": "new-access-token",
@@ -166,3 +166,6 @@ def test_refresh_session_exchanges_refresh_token(mock_post):
     )
     mock_response.raise_for_status.assert_called_once_with()
     assert result == new_session
+
+
+

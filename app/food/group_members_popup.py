@@ -8,13 +8,13 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
 from requests import RequestException
 
-from supabase_client import (
+from app.core.supabase_client import (
     add_group_member,
     get_group_members,
     remove_group_member,
 )
-from translations import translate
-from ui_components import RoundedButton
+from app.i18n.translations import translate
+from app.ui.ui_components import RoundedButton
 
 
 POPUP_COLOR = (0.70, 0.92, 0.88, 1)

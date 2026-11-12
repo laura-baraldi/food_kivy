@@ -1,4 +1,4 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 import pytest
@@ -7,7 +7,7 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from requests import RequestException
 
-from ui_components import RoundedButton
+from app.ui.ui_components import RoundedButton
 from food_lists_test_helpers import (
     FakePopup,
     fake_popup,
@@ -16,7 +16,7 @@ from food_lists_test_helpers import (
     popup_status,
     screen,
 )
-from food_list_popups import add_colored_background
+from app.food.food_list_popups import add_colored_background
 
 
 def test_add_colored_background_tracks_widget_size_and_position():
@@ -30,7 +30,7 @@ def test_add_colored_background_tracks_widget_size_and_position():
 def test_create_popup_requires_name(screen, fake_popup):
     app = make_app()
 
-    with patch("food_list_popups.App.get_running_app", return_value=app):
+    with patch("app.food.food_list_popups.App.get_running_app", return_value=app):
         screen.open_create_popup(None)
         popup = fake_popup.last
         find_widget(popup.content, RoundedButton,
@@ -43,7 +43,7 @@ def test_create_popup_requires_name(screen, fake_popup):
 def test_create_popup_rejects_duplicate_name(screen, fake_popup):
     app = make_app(food_lists=[{"id": 1, "name": " Cena "}])
 
-    with patch("food_list_popups.App.get_running_app", return_value=app):
+    with patch("app.food.food_list_popups.App.get_running_app", return_value=app):
         screen.open_create_popup(None)
         popup = fake_popup.last
         find_widget(popup.content, TextInput).text = "cena"
@@ -57,8 +57,8 @@ def test_create_popup_displays_request_error(screen, fake_popup):
     app = make_app()
 
     with (
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.create_food_list",
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.create_food_list",
               side_effect=RequestException),
     ):
         screen.open_create_popup(None)
@@ -75,9 +75,9 @@ def test_create_popup_creates_and_selects_list(screen, fake_popup):
     created = {"id": 3, "name": "Cena"}
 
     with (
-        patch("food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
         patch(
-            "food_list_popups.create_food_list",
+            "app.food.food_list_popups.create_food_list",
             return_value=created,
         ) as mock_create,
         patch.object(screen, "render_lists") as mock_render,
@@ -128,7 +128,7 @@ def test_rename_popup_validates_name(
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
     ):
         screen.open_rename_popup(None)
         popup = fake_popup.last
@@ -145,8 +145,8 @@ def test_rename_popup_displays_request_error(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.rename_food_list",
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.rename_food_list",
               side_effect=RequestException),
     ):
         screen.open_rename_popup(None)
@@ -164,8 +164,8 @@ def test_rename_popup_updates_active_list(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.rename_food_list") as mock_rename,
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.rename_food_list") as mock_rename,
         patch.object(screen, "render_lists") as mock_render,
     ):
         screen.open_rename_popup(None)
@@ -195,8 +195,8 @@ def test_delete_popup_displays_request_error(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.delete_food_list",
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.delete_food_list",
               side_effect=RequestException),
     ):
         screen.open_delete_popup(None)
@@ -218,8 +218,8 @@ def test_delete_popup_selects_next_list(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.delete_food_list") as mock_delete,
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.delete_food_list") as mock_delete,
         patch.object(screen, "render_lists") as mock_render,
     ):
         screen.open_delete_popup(None)
@@ -244,8 +244,8 @@ def test_delete_popup_clears_active_list_when_last_list_is_deleted(
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.delete_food_list"),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.delete_food_list"),
         patch.object(screen, "render_lists"),
     ):
         screen.open_delete_popup(None)
@@ -263,10 +263,10 @@ def test_create_shared_list(screen, fake_popup):
     created = {"id": 3, "name": "Famiglia", "group_id": 9}
 
     with (
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.create_group", return_value=group) as create_group,
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.create_group", return_value=group) as create_group,
         patch(
-            "food_list_popups.create_group_food_list", return_value=created
+            "app.food.food_list_popups.create_group_food_list", return_value=created
         ) as create_list,
         patch.object(screen, "render_lists") as render,
     ):
@@ -289,8 +289,8 @@ def test_create_shared_list_reports_group_error(screen, fake_popup):
     app = make_app()
 
     with (
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.create_group", side_effect=RequestException),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.create_group", side_effect=RequestException),
     ):
         screen.open_create_popup(None, shared=True)
         popup = fake_popup.last
@@ -310,11 +310,11 @@ def test_create_shared_list_removes_orphan_group(
     cleanup_error = RequestException if cleanup_fails else None
 
     with (
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.create_group", return_value=group),
-        patch("food_list_popups.create_group_food_list",
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.create_group", return_value=group),
+        patch("app.food.food_list_popups.create_group_food_list",
               side_effect=RequestException),
-        patch("food_list_popups.delete_group", side_effect=cleanup_error) as cleanup,
+        patch("app.food.food_list_popups.delete_group", side_effect=cleanup_error) as cleanup,
     ):
         screen.open_create_popup(None, shared=True)
         popup = fake_popup.last
@@ -334,9 +334,9 @@ def test_rename_shared_list_updates_group(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.rename_food_list") as rename_list,
-        patch("food_list_popups.rename_group") as rename_group,
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.rename_food_list") as rename_list,
+        patch("app.food.food_list_popups.rename_group") as rename_group,
         patch.object(screen, "render_lists"),
     ):
         screen.open_rename_popup(None)
@@ -358,9 +358,9 @@ def test_rename_shared_list_reports_group_error(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.rename_food_list"),
-        patch("food_list_popups.rename_group", side_effect=RequestException),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.rename_food_list"),
+        patch("app.food.food_list_popups.rename_group", side_effect=RequestException),
     ):
         screen.open_rename_popup(None)
         popup = fake_popup.last
@@ -379,8 +379,8 @@ def test_delete_shared_list_shows_warning_and_deletes_group(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.delete_group") as delete,
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.delete_group") as delete,
         patch.object(screen, "render_lists"),
     ):
         screen.open_delete_popup(None)
@@ -403,8 +403,8 @@ def test_delete_shared_list_reports_error(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.delete_group", side_effect=RequestException),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.delete_group", side_effect=RequestException),
     ):
         screen.open_delete_popup(None)
         popup = fake_popup.last
@@ -437,8 +437,8 @@ def test_leave_popup_reports_request_error(screen, fake_popup):
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
         patch.object(screen, "get_group_for_list", return_value=group),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.remove_group_member",
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.remove_group_member",
               side_effect=RequestException),
     ):
         screen.open_leave_popup(None)
@@ -462,8 +462,8 @@ def test_leave_shared_list(screen, fake_popup, has_remaining):
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
         patch.object(screen, "get_group_for_list", return_value=group),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.remove_group_member") as remove,
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.remove_group_member") as remove,
         patch.object(screen, "render_lists"),
     ):
         screen.open_leave_popup(None)
@@ -493,7 +493,7 @@ def test_create_popup_uses_english(
     app = make_app()
     screen.refresh_texts("en")
 
-    with patch("food_list_popups.App.get_running_app", return_value=app):
+    with patch("app.food.food_list_popups.App.get_running_app", return_value=app):
         screen.open_create_popup(None, shared=shared)
         popup = fake_popup.last
 
@@ -517,8 +517,8 @@ def test_rename_popup_uses_english_and_updates_active_label(
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
-        patch("food_list_popups.rename_food_list"),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.rename_food_list"),
         patch.object(screen, "render_lists"),
     ):
         screen.open_rename_popup(None)
@@ -543,7 +543,7 @@ def test_rename_popup_shows_english_validation_error(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
     ):
         screen.open_rename_popup(None)
         popup = fake_popup.last
@@ -593,9 +593,9 @@ def test_delete_popup_shows_english_request_error(screen, fake_popup):
 
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
-        patch("food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
         patch(
-            "food_list_popups.delete_food_list",
+            "app.food.food_list_popups.delete_food_list",
             side_effect=RequestException,
         ),
     ):
@@ -641,9 +641,9 @@ def test_leave_popup_shows_english_request_error(screen, fake_popup):
     with (
         patch.object(screen, "get_selected_list", return_value=selected),
         patch.object(screen, "get_group_for_list", return_value=group),
-        patch("food_list_popups.App.get_running_app", return_value=app),
+        patch("app.food.food_list_popups.App.get_running_app", return_value=app),
         patch(
-            "food_list_popups.remove_group_member",
+            "app.food.food_list_popups.remove_group_member",
             side_effect=RequestException,
         ),
     ):
@@ -670,3 +670,7 @@ def test_delete_popup_wraps_message(screen, fake_popup):
     message.width = 200
 
     assert message.text_size[0] == 200
+
+
+
+

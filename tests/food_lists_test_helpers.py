@@ -1,10 +1,10 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 import pytest
 from kivy.uix.label import Label
 
-from food_lists_screen import FoodListsScreen
+from app.food.food_lists_screen import FoodListsScreen
 
 
 class FakePopup:
@@ -32,7 +32,7 @@ def screen():
 def fake_popup():
     FakePopup.last = None
 
-    with patch("food_list_popups.Popup", FakePopup):
+    with patch("app.food.food_list_popups.Popup", FakePopup):
         yield FakePopup
 
 
@@ -74,3 +74,6 @@ def popup_status(popup):
         for widget in popup.content.walk()
         if isinstance(widget, Label)
     )
+
+
+

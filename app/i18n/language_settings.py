@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from translations import TEXTS
+from app.i18n.translations import TEXTS
 
 
 DEFAULT_LANGUAGE = "it"

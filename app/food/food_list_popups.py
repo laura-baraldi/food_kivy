@@ -7,7 +7,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 from requests import RequestException
 
-from supabase_client import (
+from app.core.supabase_client import (
     create_food_list,
     create_group,
     create_group_food_list,
@@ -17,8 +17,8 @@ from supabase_client import (
     rename_food_list,
     rename_group,
 )
-from translations import translate
-from ui_components import RoundedButton
+from app.i18n.translations import translate
+from app.ui.ui_components import RoundedButton
 
 POPUP_COLOR = (0.70, 0.92, 0.88, 1)
 TEXT_COLOR = (0.02, 0.35, 0.28, 1)

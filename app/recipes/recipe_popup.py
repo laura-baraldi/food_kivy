@@ -10,9 +10,9 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.spinner import Spinner
 from requests import HTTPError, RequestException, Timeout
 
-from recipe_client import generate_recipe
-from translations import translate
-from ui_components import RoundedButton
+from app.recipes.recipe_client import generate_recipe
+from app.i18n.translations import translate
+from app.ui.ui_components import RoundedButton
 
 
 class RecipePopup(Popup):

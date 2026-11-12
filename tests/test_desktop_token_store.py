@@ -1,9 +1,9 @@
-import sys
+﻿import sys
 from types import SimpleNamespace
 
 import pytest
 
-import desktop_token_store
+import app.core.desktop_token_store as desktop_token_store
 
 
 class FakeVault:
@@ -139,3 +139,6 @@ def test_delete_missing_token_does_nothing(monkeypatch, fake_backends):
     desktop_token_store.delete_token()
 
     assert vault.passwords == {}
+
+
+

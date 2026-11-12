@@ -10,9 +10,9 @@ from kivy.uix.widget import Widget
 from kivy.utils import platform
 from requests import RequestException
 
-from supabase_client import add_food, delete_food
-from translations import translate
-from ui_components import RoundedButton
+from app.core.supabase_client import add_food, delete_food
+from app.i18n.translations import translate
+from app.ui.ui_components import RoundedButton
 
 
 def show_food_popup(app):

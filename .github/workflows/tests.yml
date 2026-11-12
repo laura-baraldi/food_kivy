@@ -1,4 +1,4 @@
-name: Application tests
+﻿name: Application tests
 
 on:
   push:
@@ -41,23 +41,23 @@ jobs:
       - name: Run Python tests with coverage
         run: |
           xvfb-run -a python -m pytest \
-            --cov=auth_client \
-            --cov=android_token_store \
-            --cov=desktop_token_store \
-            --cov=auth_screen \
-            --cov=food_lists_screen \
-            --cov=food_list_popups \
-            --cov=food_popup \
-            --cov=group_members_popup \
-            --cov=language_settings \
+            --cov=app.auth.auth_client \
+            --cov=app.core.android_token_store \
+            --cov=app.core.desktop_token_store \
+            --cov=app.auth.auth_screen \
+            --cov=app.food.food_lists_screen \
+            --cov=app.food.food_list_popups \
+            --cov=app.food.food_popup \
+            --cov=app.food.group_members_popup \
+            --cov=app.i18n.language_settings \
             --cov=main \
-            --cov=recipe_client \
-            --cov=recipe_popup \
-            --cov=session_storage \
-            --cov=signup_screen \
-            --cov=supabase_client \
-            --cov=translations \
-            --cov=ui_components \
+            --cov=app.recipes.recipe_client \
+            --cov=app.recipes.recipe_popup \
+            --cov=app.core.session_storage \
+            --cov=app.auth.signup_screen \
+            --cov=app.core.supabase_client \
+            --cov=app.i18n.translations \
+            --cov=app.ui.ui_components \
             --cov-report=term-missing \
             --cov-fail-under=100
 
@@ -125,3 +125,4 @@ jobs:
       - name: Stop local Supabase
         if: always()
         run: supabase stop --no-backup
+
