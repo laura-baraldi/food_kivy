@@ -24,12 +24,12 @@ def _remove_legacy_files(data_dir):
 
 def _backend():
     if platform == "android":
-        import android_token_store
+        import app.core.android_token_store as android_token_store
 
         return android_token_store
 
     if platform in ("win", "macosx", "linux"):
-        import desktop_token_store
+        import app.core.desktop_token_store as desktop_token_store
 
         return desktop_token_store
 

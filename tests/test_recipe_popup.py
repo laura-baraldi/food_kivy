@@ -1,10 +1,10 @@
-from unittest.mock import Mock, patch
+﻿from unittest.mock import Mock, patch
 
 import pytest
 from requests import HTTPError, RequestException, Response, Timeout
 
-from recipe_popup import RecipePopup
-from translations import translate
+from app.recipes.recipe_popup import RecipePopup
+from app.i18n.translations import translate
 
 
 RECIPE = {
@@ -120,8 +120,8 @@ def test_generate_button_starts_request_in_background(popup):
 
     # Mock the worker so this test starts no real thread or network request.
     with (
-        patch("recipe_popup.App.get_running_app", return_value=app),
-        patch("recipe_popup.Thread") as thread,
+        patch("app.recipes.recipe_popup.App.get_running_app", return_value=app),
+        patch("app.recipes.recipe_popup.Thread") as thread,
     ):
         popup.generate_button.dispatch("on_release")
 
@@ -147,8 +147,8 @@ def test_generate_ignores_duplicate_requests_and_closed_popup(popup, state):
     popup._closed = state == "closed"
 
     with (
-        patch("recipe_popup.App.get_running_app") as get_app,
-        patch("recipe_popup.Thread") as thread,
+        patch("app.recipes.recipe_popup.App.get_running_app") as get_app,
+        patch("app.recipes.recipe_popup.Thread") as thread,
     ):
         popup.handle_generate(None)
 
@@ -172,8 +172,8 @@ def test_generate_handles_session_errors_without_starting_worker(
     app.get_access_token.side_effect = error
 
     with (
-        patch("recipe_popup.App.get_running_app", return_value=app),
-        patch("recipe_popup.Thread") as thread,
+        patch("app.recipes.recipe_popup.App.get_running_app", return_value=app),
+        patch("app.recipes.recipe_popup.Thread") as thread,
     ):
         popup.handle_generate(None)
 
@@ -222,8 +222,8 @@ def test_format_recipe_includes_translated_sections_and_numbered_steps(language)
 
 def test_successful_request_schedules_result_on_ui_thread(popup):
     with (
-        patch("recipe_popup.generate_recipe", return_value=RECIPE) as generate,
-        patch("recipe_popup.Clock.schedule_once") as schedule,
+        patch("app.recipes.recipe_popup.generate_recipe", return_value=RECIPE) as generate,
+        patch("app.recipes.recipe_popup.Clock.schedule_once") as schedule,
         patch.object(popup, "finish_generation") as finish,
     ):
         popup.request_recipe(2, "test-token")
@@ -255,8 +255,8 @@ def test_successful_request_schedules_result_on_ui_thread(popup):
 )
 def test_failed_request_schedules_error_on_ui_thread(popup, error, key):
     with (
-        patch("recipe_popup.generate_recipe", side_effect=error),
-        patch("recipe_popup.Clock.schedule_once") as schedule,
+        patch("app.recipes.recipe_popup.generate_recipe", side_effect=error),
+        patch("app.recipes.recipe_popup.Clock.schedule_once") as schedule,
         patch.object(popup, "finish_generation") as finish,
     ):
         popup.request_recipe(2, "test-token")
@@ -283,8 +283,8 @@ def test_failed_request_schedules_error_on_ui_thread(popup, error, key):
 )
 def test_malformed_recipe_is_reported_as_failure(popup, recipe):
     with (
-        patch("recipe_popup.generate_recipe", return_value=recipe),
-        patch("recipe_popup.Clock.schedule_once") as schedule,
+        patch("app.recipes.recipe_popup.generate_recipe", return_value=recipe),
+        patch("app.recipes.recipe_popup.Clock.schedule_once") as schedule,
         patch.object(popup, "finish_generation") as finish,
     ):
         popup.request_recipe(2, "test-token")
@@ -361,9 +361,9 @@ def test_new_recipe_restores_options_without_sending_request(language):
     popup.finish_generation("Generated recipe", None)
 
     with (
-        patch("recipe_popup.App.get_running_app") as get_app,
-        patch("recipe_popup.Thread") as thread,
-        patch("recipe_popup.generate_recipe") as generate,
+        patch("app.recipes.recipe_popup.App.get_running_app") as get_app,
+        patch("app.recipes.recipe_popup.Thread") as thread,
+        patch("app.recipes.recipe_popup.generate_recipe") as generate,
     ):
         popup.generate_button.dispatch("on_release")
 
@@ -389,8 +389,8 @@ def test_new_recipe_restores_options_without_sending_request(language):
     app.get_access_token.return_value = "test-token"
 
     with (
-        patch("recipe_popup.App.get_running_app", return_value=app),
-        patch("recipe_popup.Thread") as thread,
+        patch("app.recipes.recipe_popup.App.get_running_app", return_value=app),
+        patch("app.recipes.recipe_popup.Thread") as thread,
     ):
         popup.generate_button.dispatch("on_release")
 
@@ -401,3 +401,6 @@ def test_new_recipe_restores_options_without_sending_request(language):
     )
     thread.return_value.start.assert_called_once_with()
     assert popup.is_generating
+
+
+

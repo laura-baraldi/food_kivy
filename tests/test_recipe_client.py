@@ -1,10 +1,10 @@
-from unittest.mock import Mock, patch
+﻿from unittest.mock import Mock, patch
 
 import pytest
 from requests import HTTPError, Timeout
 
-from recipe_client import RECIPE_URL, generate_recipe
-from supabase_client import get_authenticated_headers
+from app.recipes.recipe_client import RECIPE_URL, generate_recipe
+from app.core.supabase_client import get_authenticated_headers
 
 
 RECIPE = {
@@ -25,7 +25,7 @@ def test_generate_recipe_sends_authenticated_request():
     response = Mock()
     response.json.return_value = {"recipe": RECIPE}
 
-    with patch("recipe_client.requests.post", return_value=response) as post:
+    with patch("app.recipes.recipe_client.requests.post", return_value=response) as post:
         result = generate_recipe("Pizza", 2, "it", "test-token")
 
     post.assert_called_once_with(
@@ -49,7 +49,7 @@ def test_generate_recipe_propagates_http_errors(status):
     error = HTTPError(response=response)
     response.raise_for_status.side_effect = error
 
-    with patch("recipe_client.requests.post", return_value=response):
+    with patch("app.recipes.recipe_client.requests.post", return_value=response):
         with pytest.raises(HTTPError) as caught:
             generate_recipe("Pizza", 2, "en", "test-token")
 
@@ -58,7 +58,7 @@ def test_generate_recipe_propagates_http_errors(status):
 
 
 def test_generate_recipe_propagates_timeout():
-    with patch("recipe_client.requests.post", side_effect=Timeout):
+    with patch("app.recipes.recipe_client.requests.post", side_effect=Timeout):
         with pytest.raises(Timeout):
             generate_recipe("Pizza", 2, "it", "test-token")
 
@@ -78,7 +78,7 @@ def test_generate_recipe_rejects_invalid_response(payload):
     response = Mock()
     response.json.return_value = payload
 
-    with patch("recipe_client.requests.post", return_value=response):
+    with patch("app.recipes.recipe_client.requests.post", return_value=response):
         with pytest.raises(ValueError, match="Invalid recipe response"):
             generate_recipe("Pizza", 2, "it", "test-token")
 
@@ -87,6 +87,9 @@ def test_generate_recipe_propagates_invalid_json():
     response = Mock()
     response.json.side_effect = ValueError("Invalid JSON")
 
-    with patch("recipe_client.requests.post", return_value=response):
+    with patch("app.recipes.recipe_client.requests.post", return_value=response):
         with pytest.raises(ValueError, match="Invalid JSON"):
             generate_recipe("Pizza", 2, "it", "test-token")
+
+
+

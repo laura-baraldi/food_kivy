@@ -1,4 +1,4 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 import pytest
@@ -7,8 +7,8 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
 from requests import RequestException
 
-from food_popup import show_food_popup
-from ui_components import RoundedButton
+from app.food.food_popup import show_food_popup
+from app.ui.ui_components import RoundedButton
 
 
 class FakePopup:
@@ -51,8 +51,8 @@ def fake_kivy_services():
     FakePopup.last = None
 
     with (
-        patch("food_popup.Popup", FakePopup),
-        patch("food_popup.Clock", clock),
+        patch("app.food.food_popup.Popup", FakePopup),
+        patch("app.food.food_popup.Clock", clock),
     ):
         yield scheduler
 
@@ -147,7 +147,7 @@ def test_popup_builds_empty_list_and_updates_layout(
         TextInput,
         hint_text="Nome del cibo",
     )
-    with patch("food_popup.platform", "android"):
+    with patch("app.food.food_popup.platform", "android"):
         food_input.focus = True
         food_input.focus = False
 
@@ -198,7 +198,7 @@ def test_add_food_updates_remote_and_local_list():
     controls.food_input.text = "pizza"
 
     with patch(
-        "food_popup.add_food"
+        "app.food.food_popup.add_food"
     ) as mock_add:
         controls.add_button.dispatch("on_press")
 
@@ -219,7 +219,7 @@ def test_add_food_displays_request_error():
     controls.food_input.text = "Pizza"
 
     with patch(
-        "food_popup.add_food",
+        "app.food.food_popup.add_food",
         side_effect=RequestException,
     ):
         controls.add_button.dispatch("on_press")
@@ -273,7 +273,7 @@ def test_delete_food_updates_remote_and_local_list():
     controls.food_input.text = "pAsTa"
 
     with patch(
-        "food_popup.delete_food"
+        "app.food.food_popup.delete_food"
     ) as mock_delete:
         controls.delete_button.dispatch("on_press")
 
@@ -296,7 +296,7 @@ def test_delete_food_displays_request_error():
     controls.food_input.text = "Pasta"
 
     with patch(
-        "food_popup.delete_food",
+        "app.food.food_popup.delete_food",
         side_effect=RequestException,
     ):
         controls.delete_button.dispatch("on_press")
@@ -332,7 +332,7 @@ def test_food_popup_uses_english_without_translating_food_names():
     assert status.text == "Pasta is already in the list"
 
     food_input.text = "pizza"
-    with patch("food_popup.add_food") as mock_add:
+    with patch("app.food.food_popup.add_food") as mock_add:
         add_button.dispatch("on_press")
 
     mock_add.assert_called_once_with("Pizza", 7, "test-token")
@@ -340,7 +340,7 @@ def test_food_popup_uses_english_without_translating_food_names():
     assert status.text == "Added: Pizza"
 
     food_input.text = "pasta"
-    with patch("food_popup.delete_food") as mock_delete:
+    with patch("app.food.food_popup.delete_food") as mock_delete:
         delete_button.dispatch("on_press")
 
     mock_delete.assert_called_once_with("Pasta", 7, "test-token")
@@ -372,7 +372,7 @@ def test_food_popup_shows_english_empty_and_error_messages():
 
     food_input.text = "Pasta"
     with patch(
-        "food_popup.add_food", side_effect=RequestException
+        "app.food.food_popup.add_food", side_effect=RequestException
     ):
         add_button.dispatch("on_press")
     assert status.text == "Could not add the food"
@@ -388,7 +388,11 @@ def test_food_popup_shows_english_empty_and_error_messages():
     app.food.append("Pasta")
     food_input.text = "Pasta"
     with patch(
-        "food_popup.delete_food", side_effect=RequestException
+        "app.food.food_popup.delete_food", side_effect=RequestException
     ):
         delete_button.dispatch("on_press")
     assert status.text == "Could not delete the food"
+
+
+
+

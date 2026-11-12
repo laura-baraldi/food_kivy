@@ -1,4 +1,4 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 import pytest
@@ -9,8 +9,8 @@ from requests import RequestException
 
 from kivy.metrics import dp
 
-from group_members_popup import add_colored_background, show_group_members_popup
-from ui_components import RoundedButton
+from app.food.group_members_popup import add_colored_background, show_group_members_popup
+from app.ui.ui_components import RoundedButton
 
 
 OWNER_GROUP = {
@@ -114,9 +114,9 @@ def test_owner_sees_members_and_management_controls():
     app = make_app()
 
     with (
-        patch("group_members_popup.App.get_running_app", return_value=app),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=MEMBERS),
+        patch("app.food.group_members_popup.App.get_running_app", return_value=app),
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=MEMBERS),
     ):
         show_group_members_popup(OWNER_GROUP)
 
@@ -146,9 +146,9 @@ def test_regular_member_can_only_view_members():
     app = make_app(user_id="member-2")
 
     with (
-        patch("group_members_popup.App.get_running_app", return_value=app),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=MEMBERS),
+        patch("app.food.group_members_popup.App.get_running_app", return_value=app),
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=MEMBERS),
     ):
         show_group_members_popup(OWNER_GROUP)
 
@@ -164,10 +164,10 @@ def test_initial_member_loading_error_is_displayed():
     app = make_app()
 
     with (
-        patch("group_members_popup.App.get_running_app", return_value=app),
-        patch("group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.App.get_running_app", return_value=app),
+        patch("app.food.group_members_popup.Popup", FakePopup),
         patch(
-            "group_members_popup.get_group_members",
+            "app.food.group_members_popup.get_group_members",
             side_effect=RequestException,
         ),
     ):
@@ -181,11 +181,11 @@ def test_initial_member_loading_error_is_displayed():
 def test_close_button_dismisses_popup():
     with (
         patch(
-            "group_members_popup.App.get_running_app",
+            "app.food.group_members_popup.App.get_running_app",
             return_value=make_app(),
         ),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=[]),
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=[]),
     ):
         show_group_members_popup(OWNER_GROUP)
         popup = FakePopup.last
@@ -199,12 +199,12 @@ def test_close_button_dismisses_popup():
 def test_add_member_requires_email():
     with (
         patch(
-            "group_members_popup.App.get_running_app",
+            "app.food.group_members_popup.App.get_running_app",
             return_value=make_app(),
         ),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=[]),
-        patch("group_members_popup.add_group_member") as add,
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=[]),
+        patch("app.food.group_members_popup.add_group_member") as add,
     ):
         show_group_members_popup(OWNER_GROUP)
         popup = FakePopup.last
@@ -221,12 +221,12 @@ def test_add_member_requires_email():
 def test_add_member_rejects_local_duplicate():
     with (
         patch(
-            "group_members_popup.App.get_running_app",
+            "app.food.group_members_popup.App.get_running_app",
             return_value=make_app(),
         ),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=MEMBERS),
-        patch("group_members_popup.add_group_member") as add,
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=MEMBERS),
+        patch("app.food.group_members_popup.add_group_member") as add,
     ):
         show_group_members_popup(OWNER_GROUP)
         popup = FakePopup.last
@@ -252,13 +252,13 @@ def test_add_member_refreshes_list_and_clears_input():
     app = make_app()
 
     with (
-        patch("group_members_popup.App.get_running_app", return_value=app),
-        patch("group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.App.get_running_app", return_value=app),
+        patch("app.food.group_members_popup.Popup", FakePopup),
         patch(
-            "group_members_popup.get_group_members",
+            "app.food.group_members_popup.get_group_members",
             side_effect=[MEMBERS, refreshed],
         ) as get_members,
-        patch("group_members_popup.add_group_member") as add,
+        patch("app.food.group_members_popup.add_group_member") as add,
     ):
         show_group_members_popup(OWNER_GROUP)
         popup = FakePopup.last
@@ -306,12 +306,12 @@ def test_add_member_refreshes_list_and_clears_input():
 def test_add_member_translates_request_errors(error, expected):
     with (
         patch(
-            "group_members_popup.App.get_running_app",
+            "app.food.group_members_popup.App.get_running_app",
             return_value=make_app(),
         ),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=[]),
-        patch("group_members_popup.add_group_member", side_effect=error),
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=[]),
+        patch("app.food.group_members_popup.add_group_member", side_effect=error),
     ):
         show_group_members_popup(OWNER_GROUP)
         popup = FakePopup.last
@@ -327,13 +327,13 @@ def test_remove_member_refreshes_list():
     app = make_app()
 
     with (
-        patch("group_members_popup.App.get_running_app", return_value=app),
-        patch("group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.App.get_running_app", return_value=app),
+        patch("app.food.group_members_popup.Popup", FakePopup),
         patch(
-            "group_members_popup.get_group_members",
+            "app.food.group_members_popup.get_group_members",
             side_effect=[MEMBERS, MEMBERS[:1]],
         ),
-        patch("group_members_popup.remove_group_member") as remove,
+        patch("app.food.group_members_popup.remove_group_member") as remove,
     ):
         show_group_members_popup(OWNER_GROUP)
         popup = FakePopup.last
@@ -350,13 +350,13 @@ def test_remove_member_refreshes_list():
 def test_remove_member_displays_request_error():
     with (
         patch(
-            "group_members_popup.App.get_running_app",
+            "app.food.group_members_popup.App.get_running_app",
             return_value=make_app(),
         ),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=MEMBERS),
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=MEMBERS),
         patch(
-            "group_members_popup.remove_group_member",
+            "app.food.group_members_popup.remove_group_member",
             side_effect=make_error(without_response=True),
         ),
     ):
@@ -376,10 +376,10 @@ def test_owner_sees_members_popup_in_english():
     app.language = "en"
 
     with (
-        patch("group_members_popup.App.get_running_app", return_value=app),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=MEMBERS),
-        patch("group_members_popup.add_group_member") as add,
+        patch("app.food.group_members_popup.App.get_running_app", return_value=app),
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=MEMBERS),
+        patch("app.food.group_members_popup.add_group_member") as add,
     ):
         show_group_members_popup(OWNER_GROUP)
         popup = FakePopup.last
@@ -413,9 +413,9 @@ def test_member_sees_read_only_popup_in_english():
     app.language = "en"
 
     with (
-        patch("group_members_popup.App.get_running_app", return_value=app),
-        patch("group_members_popup.Popup", FakePopup),
-        patch("group_members_popup.get_group_members", return_value=MEMBERS),
+        patch("app.food.group_members_popup.App.get_running_app", return_value=app),
+        patch("app.food.group_members_popup.Popup", FakePopup),
+        patch("app.food.group_members_popup.get_group_members", return_value=MEMBERS),
     ):
         show_group_members_popup(OWNER_GROUP)
 
@@ -425,3 +425,7 @@ def test_member_sees_read_only_popup_in_english():
     assert "member@example.com\nmember" in widget_texts(
         popup.content, Label
     )
+
+
+
+

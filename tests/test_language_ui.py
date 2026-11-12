@@ -1,12 +1,12 @@
-
+﻿
 from unittest.mock import patch
 
 import pytest
 
-from language_settings import load_language
+from app.i18n.language_settings import load_language
 from main import FoodApp
-from translations import TEXTS, translate
-from ui_components import RoundedButton
+from app.i18n.translations import TEXTS, translate
+from app.ui.ui_components import RoundedButton
 
 
 @pytest.fixture
@@ -121,10 +121,10 @@ def test_changing_language_updates_visible_list_actions(app):
     lists_screen = app.root.get_screen("food_lists")
 
     with (
-        patch("food_lists_screen.App.get_running_app", return_value=app),
+        patch("app.food.food_lists_screen.App.get_running_app", return_value=app),
         patch.object(app, "reload_food_lists"),
         patch.object(app, "get_access_token", return_value="test-token"),
-        patch("food_lists_screen.get_groups", return_value=[]),
+        patch("app.food.food_lists_screen.get_groups", return_value=[]),
     ):
         app.root.current = "food_lists"
         lists_screen.selected_list_id = 1
@@ -211,3 +211,6 @@ def test_recipe_popup_does_not_open_without_selected_dish(app):
         app.open_recipe_popup(None)
 
     popup.assert_not_called()
+
+
+

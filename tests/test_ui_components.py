@@ -1,6 +1,6 @@
-import pytest
+﻿import pytest
 
-from ui_components import MenuButton, RoundedButton
+from app.ui.ui_components import MenuButton, RoundedButton
 
 
 def test_rounded_button_draws_and_updates_background():
@@ -41,3 +41,6 @@ def test_menu_button_draws_and_updates_hamburger_icon():
     assert button.top_line.points == pytest.approx([76, 96, 164, 96])
     assert button.middle_line.points == pytest.approx([76, 80, 164, 80])
     assert button.bottom_line.points == pytest.approx([76, 64, 164, 64])
+
+
+

@@ -9,12 +9,12 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from requests import RequestException
 
-from food_list_popups import FoodListPopupsMixin
-from food_popup import show_food_popup
-from group_members_popup import show_group_members_popup
-from supabase_client import get_groups
-from translations import translate
-from ui_components import MenuButton, RoundedButton
+from app.food.food_list_popups import FoodListPopupsMixin
+from app.food.food_popup import show_food_popup
+from app.food.group_members_popup import show_group_members_popup
+from app.core.supabase_client import get_groups
+from app.i18n.translations import translate
+from app.ui.ui_components import MenuButton, RoundedButton
 
 
 TEXT_COLOR = (0.02, 0.35, 0.28, 1)

@@ -1,11 +1,11 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 import pytest
 from kivy.uix.screenmanager import Screen, ScreenManager
 from requests import RequestException
 
-from signup_screen import SignUpScreen
+from app.auth.signup_screen import SignUpScreen
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def screen():
 def test_get_background_source_uses_tall_image_for_narrow_screen(screen):
     window = SimpleNamespace(width=300, height=800)
 
-    with patch("signup_screen.Window", window):
+    with patch("app.auth.signup_screen.Window", window):
         result = screen.get_background_source()
 
     assert result == "images/background_tall.png"
@@ -25,7 +25,7 @@ def test_get_background_source_uses_tall_image_for_narrow_screen(screen):
 def test_get_background_source_uses_standard_image(screen):
     window = SimpleNamespace(width=600, height=800)
 
-    with patch("signup_screen.Window", window):
+    with patch("app.auth.signup_screen.Window", window):
         result = screen.get_background_source()
 
     assert result == "images/background.png"
@@ -54,7 +54,7 @@ def test_handle_sign_up_stops_when_credentials_are_missing(screen):
     screen.email_input.text = ""
     screen.password_input.text = ""
 
-    with patch("signup_screen.sign_up") as mock_sign_up:
+    with patch("app.auth.signup_screen.sign_up") as mock_sign_up:
         screen.handle_sign_up(None)
 
     mock_sign_up.assert_not_called()
@@ -64,7 +64,7 @@ def test_handle_sign_up_rejects_short_password(screen):
     screen.email_input.text = "laura@example.com"
     screen.password_input.text = "12345"
 
-    with patch("signup_screen.sign_up") as mock_sign_up:
+    with patch("app.auth.signup_screen.sign_up") as mock_sign_up:
         screen.handle_sign_up(None)
 
     mock_sign_up.assert_not_called()
@@ -80,8 +80,8 @@ def test_handle_sign_up_opens_food_screen_when_session_is_returned(screen):
     app = SimpleNamespace(open_food_screen=Mock())
 
     with (
-        patch("signup_screen.sign_up", return_value=session) as mock_sign_up,
-        patch("signup_screen.App.get_running_app", return_value=app),
+        patch("app.auth.signup_screen.sign_up", return_value=session) as mock_sign_up,
+        patch("app.auth.signup_screen.App.get_running_app", return_value=app),
     ):
         screen.handle_sign_up(None)
 
@@ -96,7 +96,7 @@ def test_handle_sign_up_requests_email_confirmation(screen):
     screen.password_input.text = "secure-password"
 
     with patch(
-        "signup_screen.sign_up",
+        "app.auth.signup_screen.sign_up",
         return_value={"user": {"id": "user-123"}},
     ):
         screen.handle_sign_up(None)
@@ -111,7 +111,7 @@ def test_handle_sign_up_displays_error_when_request_fails(screen):
     screen.email_input.text = "laura@example.com"
     screen.password_input.text = "secure-password"
 
-    with patch("signup_screen.sign_up", side_effect=RequestException):
+    with patch("app.auth.signup_screen.sign_up", side_effect=RequestException):
         screen.handle_sign_up(None)
 
     assert screen.status_label.text == "Impossibile creare l'account"
@@ -152,7 +152,10 @@ def test_refresh_texts_translates_signup_and_current_message(screen):
 def test_language_button_requests_change_from_app(screen):
     app = SimpleNamespace(language="it", set_language=Mock())
 
-    with patch("signup_screen.App.get_running_app", return_value=app):
+    with patch("app.auth.signup_screen.App.get_running_app", return_value=app):
         screen.toggle_language(None)
 
     app.set_language.assert_called_once_with("en")
+
+
+

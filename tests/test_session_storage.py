@@ -1,8 +1,8 @@
-import json
+﻿import json
 
 import pytest
 
-import session_storage
+import app.core.session_storage as session_storage
 
 
 class MemoryStore:
@@ -144,10 +144,10 @@ def test_logout_marker_prevents_restoring_old_token(tmp_path, store):
 @pytest.mark.parametrize(
     ("system", "module_name"),
     [
-        ("win", "desktop_token_store"),
-        ("macosx", "desktop_token_store"),
-        ("linux", "desktop_token_store"),
-        ("android", "android_token_store"),
+        ("win", "app.core.desktop_token_store"),
+        ("macosx", "app.core.desktop_token_store"),
+        ("linux", "app.core.desktop_token_store"),
+        ("android", "app.core.android_token_store"),
         ("ios", None),
     ],
 )
@@ -160,3 +160,7 @@ def test_backend_selection(monkeypatch, system, module_name):
         assert backend is None
     else:
         assert backend.__name__ == module_name
+
+
+
+

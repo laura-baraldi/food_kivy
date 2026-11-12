@@ -1,6 +1,6 @@
-import pytest
+﻿import pytest
 
-from language_settings import load_language, save_language
+from app.i18n.language_settings import load_language, save_language
 
 
 def test_language_is_saved_and_loaded(tmp_path):
@@ -42,3 +42,6 @@ def test_unsupported_language_cannot_be_saved(tmp_path):
         save_language(tmp_path, "fr")
 
     assert load_language(tmp_path) == "it"
+
+
+

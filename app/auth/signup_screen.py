@@ -9,9 +9,9 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from requests import RequestException
 
-from auth_client import sign_up
-from translations import translate
-from ui_components import RoundedButton
+from app.auth.auth_client import sign_up
+from app.i18n.translations import translate
+from app.ui.ui_components import RoundedButton
 
 
 class SignUpScreen(Screen):

@@ -1,9 +1,9 @@
-from unittest.mock import Mock, patch
+﻿from unittest.mock import Mock, patch
 
 import pytest
 from requests import HTTPError
 
-from supabase_client import (
+from app.core.supabase_client import (
     FOOD_LISTS_URL,
     FOODS_URL,
     GROUP_MEMBERS_URL,
@@ -54,7 +54,7 @@ def test_get_authenticated_headers_adds_token():
     assert "Authorization" not in HEADERS
 
 
-@patch("supabase_client.requests.get")
+@patch("app.core.supabase_client.requests.get")
 def test_get_food_lists_sends_access_token(mock_get):
     food_lists = [{
         "id": LIST_ID,
@@ -83,7 +83,7 @@ def test_get_food_lists_sends_access_token(mock_get):
     assert result == food_lists
 
 
-@patch("supabase_client.requests.get")
+@patch("app.core.supabase_client.requests.get")
 def test_get_foods_filters_by_list(mock_get):
     mock_response = Mock()
     mock_response.json.return_value = [
@@ -108,7 +108,7 @@ def test_get_foods_filters_by_list(mock_get):
     assert result == ["Pasta", "Pizza"]
 
 
-@patch("supabase_client.requests.post")
+@patch("app.core.supabase_client.requests.post")
 def test_create_food_list_returns_created_list(mock_post):
     created_list = {
         "id": LIST_ID,
@@ -139,7 +139,7 @@ def test_create_food_list_returns_created_list(mock_post):
     assert result == created_list
 
 
-@patch("supabase_client.requests.patch")
+@patch("app.core.supabase_client.requests.patch")
 def test_rename_food_list_filters_by_id(mock_patch):
     mock_response = Mock()
     mock_patch.return_value = mock_response
@@ -156,7 +156,7 @@ def test_rename_food_list_filters_by_id(mock_patch):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("supabase_client.requests.delete")
+@patch("app.core.supabase_client.requests.delete")
 def test_delete_food_list_filters_by_id(mock_delete):
     mock_response = Mock()
     mock_delete.return_value = mock_response
@@ -172,7 +172,7 @@ def test_delete_food_list_filters_by_id(mock_delete):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("supabase_client.requests.post")
+@patch("app.core.supabase_client.requests.post")
 def test_add_food_includes_list_id(mock_post):
     mock_response = Mock()
     mock_post.return_value = mock_response
@@ -191,7 +191,7 @@ def test_add_food_includes_list_id(mock_post):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("supabase_client.requests.delete")
+@patch("app.core.supabase_client.requests.delete")
 def test_delete_food_filters_by_name_and_list(mock_delete):
     mock_response = Mock()
     mock_delete.return_value = mock_response
@@ -210,7 +210,7 @@ def test_delete_food_filters_by_name_and_list(mock_delete):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("supabase_client.requests.get")
+@patch("app.core.supabase_client.requests.get")
 def test_get_foods_raises_http_error(mock_get):
     mock_response = Mock()
     mock_response.status_code = 401
@@ -229,7 +229,7 @@ def test_get_foods_raises_http_error(mock_get):
     assert error.value.response.status_code == 401
 
 
-@patch("supabase_client.requests.get")
+@patch("app.core.supabase_client.requests.get")
 def test_get_groups_returns_accessible_groups(mock_get):
     groups = [{
         "id": GROUP_ID,
@@ -257,7 +257,7 @@ def test_get_groups_returns_accessible_groups(mock_get):
     assert result == groups
 
 
-@patch("supabase_client.requests.post")
+@patch("app.core.supabase_client.requests.post")
 def test_create_group_returns_created_group(mock_post):
     created_group = {
         "id": GROUP_ID,
@@ -284,7 +284,7 @@ def test_create_group_returns_created_group(mock_post):
     assert result == created_group
 
 
-@patch("supabase_client.requests.patch")
+@patch("app.core.supabase_client.requests.patch")
 def test_rename_group_filters_by_id(mock_patch):
     mock_response = Mock()
     mock_patch.return_value = mock_response
@@ -301,7 +301,7 @@ def test_rename_group_filters_by_id(mock_patch):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("supabase_client.requests.delete")
+@patch("app.core.supabase_client.requests.delete")
 def test_delete_group_filters_by_id(mock_delete):
     mock_response = Mock()
     mock_delete.return_value = mock_response
@@ -317,7 +317,7 @@ def test_delete_group_filters_by_id(mock_delete):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("supabase_client.requests.post")
+@patch("app.core.supabase_client.requests.post")
 def test_get_group_members_returns_members(mock_post):
     members = [{
         "user_id": MEMBER_ID,
@@ -341,7 +341,7 @@ def test_get_group_members_returns_members(mock_post):
     assert result == members
 
 
-@patch("supabase_client.requests.post")
+@patch("app.core.supabase_client.requests.post")
 def test_add_group_member_sends_email(mock_post):
     mock_response = Mock()
     mock_post.return_value = mock_response
@@ -360,7 +360,7 @@ def test_add_group_member_sends_email(mock_post):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("supabase_client.requests.delete")
+@patch("app.core.supabase_client.requests.delete")
 def test_remove_group_member_filters_membership(mock_delete):
     mock_response = Mock()
     mock_delete.return_value = mock_response
@@ -383,7 +383,7 @@ def test_remove_group_member_filters_membership(mock_delete):
     mock_response.raise_for_status.assert_called_once_with()
 
 
-@patch("supabase_client.requests.post")
+@patch("app.core.supabase_client.requests.post")
 def test_create_group_food_list_returns_created_list(mock_post):
     created_list = {
         "id": LIST_ID,
@@ -412,3 +412,6 @@ def test_create_group_food_list_returns_created_list(mock_post):
     )
     mock_response.raise_for_status.assert_called_once_with()
     assert result == created_list
+
+
+

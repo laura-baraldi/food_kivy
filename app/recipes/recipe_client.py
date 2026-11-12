@@ -1,7 +1,7 @@
 import requests
 
 from config import SUPABASE_URL
-from supabase_client import get_authenticated_headers
+from app.core.supabase_client import get_authenticated_headers
 
 
 RECIPE_URL = f"{SUPABASE_URL.rstrip('/')}/functions/v1/generate-recipe"

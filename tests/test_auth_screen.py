@@ -1,11 +1,11 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 import pytest
 from kivy.uix.screenmanager import Screen, ScreenManager
 from requests import RequestException
 
-from auth_screen import AuthScreen
+from app.auth.auth_screen import AuthScreen
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def screen():
 def test_get_background_source_uses_tall_image_for_narrow_screen(screen):
     window = SimpleNamespace(width=300, height=800)
 
-    with patch("auth_screen.Window", window):
+    with patch("app.auth.auth_screen.Window", window):
         result = screen.get_background_source()
 
     assert result == "images/background_tall.png"
@@ -25,7 +25,7 @@ def test_get_background_source_uses_tall_image_for_narrow_screen(screen):
 def test_get_background_source_uses_standard_image(screen):
     window = SimpleNamespace(width=600, height=800)
 
-    with patch("auth_screen.Window", window):
+    with patch("app.auth.auth_screen.Window", window):
         result = screen.get_background_source()
 
     assert result == "images/background.png"
@@ -54,7 +54,7 @@ def test_handle_sign_in_stops_when_credentials_are_missing(screen):
     screen.email_input.text = ""
     screen.password_input.text = ""
 
-    with patch("auth_screen.sign_in") as mock_sign_in:
+    with patch("app.auth.auth_screen.sign_in") as mock_sign_in:
         screen.handle_sign_in(None)
 
     mock_sign_in.assert_not_called()
@@ -67,8 +67,8 @@ def test_handle_sign_in_opens_food_screen(screen):
     app = SimpleNamespace(open_food_screen=Mock())
 
     with (
-        patch("auth_screen.sign_in", return_value=session) as mock_sign_in,
-        patch("auth_screen.App.get_running_app", return_value=app),
+        patch("app.auth.auth_screen.sign_in", return_value=session) as mock_sign_in,
+        patch("app.auth.auth_screen.App.get_running_app", return_value=app),
     ):
         screen.handle_sign_in(None)
 
@@ -83,7 +83,7 @@ def test_handle_sign_in_displays_error_when_request_fails(screen):
     screen.email_input.text = "laura@example.com"
     screen.password_input.text = "wrong-password"
 
-    with patch("auth_screen.sign_in", side_effect=RequestException):
+    with patch("app.auth.auth_screen.sign_in", side_effect=RequestException):
         screen.handle_sign_in(None)
 
     assert screen.status_label.text == "Email o password non corretti"
@@ -104,7 +104,7 @@ def test_open_sign_up_changes_screen(screen):
 def test_password_reset_requires_email(screen):
     screen.email_input.text = ""
 
-    with patch("auth_screen.request_password_reset") as mock_reset:
+    with patch("app.auth.auth_screen.request_password_reset") as mock_reset:
         screen.handle_password_reset(None)
 
     mock_reset.assert_not_called()
@@ -114,7 +114,7 @@ def test_password_reset_requires_email(screen):
 def test_password_reset_sends_normalized_email(screen):
     screen.email_input.text = "  LAURA@EXAMPLE.COM  "
 
-    with patch("auth_screen.request_password_reset") as mock_reset:
+    with patch("app.auth.auth_screen.request_password_reset") as mock_reset:
         screen.handle_password_reset(None)
 
     mock_reset.assert_called_once_with("laura@example.com")
@@ -127,7 +127,7 @@ def test_password_reset_displays_error_when_request_fails(screen):
     screen.email_input.text = "laura@example.com"
 
     with patch(
-        "auth_screen.request_password_reset",
+        "app.auth.auth_screen.request_password_reset",
         side_effect=RequestException,
     ):
         screen.handle_password_reset(None)
@@ -159,7 +159,10 @@ def test_refresh_texts_translates_login_and_current_message(screen):
 def test_language_button_requests_change_from_app(screen):
     app = SimpleNamespace(language="it", set_language=Mock())
 
-    with patch("auth_screen.App.get_running_app", return_value=app):
+    with patch("app.auth.auth_screen.App.get_running_app", return_value=app):
         screen.toggle_language(None)
 
     app.set_language.assert_called_once_with("en")
+
+
+
