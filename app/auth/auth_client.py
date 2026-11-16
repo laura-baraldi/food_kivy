@@ -11,7 +11,7 @@ HEADERS = {
 }
 
 PASSWORD_RESET_REDIRECT_URL = (
-    "https://laurabaraldi98-lgtm.github.io/food_kivy/"
+    "https://laura-baraldi.github.io/food_kivy/"
 )
 
 

@@ -1,211 +1,430 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Food App</title>
 
     <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #b3ebe0;
-            color: #05594a;
-            font-family: Arial, sans-serif;
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #b3ebe0;
+        color: #05594a;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Language selector */
+      .language-switch {
+        position: fixed;
+        top: 24px;
+        right: 28px;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .language-switch button {
+        width: 48px;
+        height: 42px;
+        min-height: 42px;
+        padding: 5px;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background-color 0.2s,
+          border-color 0.2s;
+      }
+
+      .language-switch button:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .language-switch button.active {
+        border-color: #15977f;
+        background-color: rgba(255, 255, 255, 0.55);
+      }
+
+      .language-switch button img {
+        display: block;
+        width: 32px;
+        height: 22px;
+        max-width: 32px;
+        max-height: 22px;
+        object-fit: contain;
+      }
+
+      /* Main card */
+      main {
+        width: min(85%, 476px);
+        padding: 40px 28px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.88);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 30px;
+      }
+
+      p {
+        font-size: 18px;
+        line-height: 1.5;
+      }
+
+      /* Password reset form */
+      #reset-form {
+        display: none;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      #reset-form input {
+        width: 100%;
+        min-height: 46px;
+        padding: 10px 14px;
+        border: 1px solid #15977f;
+        border-radius: 12px;
+        font-size: 16px;
+      }
+
+      #reset-form > button {
+        width: 100%;
+        min-height: 46px;
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 12px;
+        background-color: #1a9a82;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      #reset-form > button:hover {
+        background-color: #147d6a;
+      }
+
+      #status {
+        min-height: 24px;
+        margin-bottom: 0;
+        font-size: 15px;
+      }
+
+      #success-message[hidden] {
+        display: none;
+      }
+
+      @media (max-width: 480px) {
+        .language-switch {
+          top: 16px;
+          right: 16px;
         }
 
         main {
-            width: min(85%, 420px);
-            padding: 40px 28px;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.88);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+          width: 90%;
+          padding: 35px 22px;
         }
 
         h1 {
-            margin-top: 0;
-            font-size: 30px;
+          font-size: 25px;
         }
-
-        p {
-            font-size: 18px;
-            line-height: 1.5;
-        }
-
-        form {
-            display: none;
-            gap: 14px;
-        }
-
-        input,
-        button {
-            box-sizing: border-box;
-            width: 100%;
-            min-height: 46px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 16px;
-        }
-
-        input {
-            border: 1px solid #15977f;
-        }
-
-        button {
-            border: 0;
-            background-color: #1a9a82;
-            color: white;
-            cursor: pointer;
-        }
-
-        #status {
-            min-height: 24px;
-            font-size: 15px;
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
+    <!-- Language selector: fixed outside the main card -->
+    <nav class="language-switch" aria-label="Language selection">
+      <button
+        type="button"
+        id="lang-it"
+        class="active"
+        aria-label="Italiano"
+        aria-pressed="true"
+        onclick="changeLanguage('it')"
+      >
+        <img src="images/flag_it.png" alt="Italiano" />
+      </button>
+
+      <button
+        type="button"
+        id="lang-en"
+        aria-label="English"
+        aria-pressed="false"
+        onclick="changeLanguage('en')"
+      >
+        <img src="images/flag_en.png" alt="English" />
+      </button>
+    </nav>
+
     <main>
-        <section id="confirmation-message">
-            <h1>Email confermata!</h1>
-            <p>
-                Il tuo account è pronto.
-                Ora puoi tornare all'app e accedere.
-            </p>
-        </section>
+      <!-- Email confirmation -->
+      <section id="confirmation-message">
+        <h1 id="confirmation-title">Email confermata!</h1>
 
-        <form id="reset-form">
-            <h1>Nuova password</h1>
+        <p id="confirmation-text">
+          Il tuo account è pronto. Ora puoi tornare all'app e accedere.
+        </p>
+      </section>
 
-            <input id="password" type="password" minlength="6" placeholder="Nuova password" required>
+      <!-- Password reset -->
+      <form id="reset-form">
+        <h1 id="reset-title">Nuova password</h1>
 
-            <input id="password-confirmation" type="password" minlength="6" placeholder="Ripeti la nuova password"
-                required>
+        <input
+          id="password"
+          type="password"
+          minlength="6"
+          placeholder="Nuova password"
+          autocomplete="new-password"
+          required
+        />
 
-            <button type="submit">
-                Salva nuova password
-            </button>
+        <input
+          id="password-confirmation"
+          type="password"
+          minlength="6"
+          placeholder="Ripeti la nuova password"
+          autocomplete="new-password"
+          required
+        />
 
-            <p id="status"></p>
-        </form>
+        <button type="submit" id="reset-button">Salva nuova password</button>
+
+        <p id="status" aria-live="polite"></p>
+      </form>
+
+      <!-- Successful password update -->
+      <section id="success-message" hidden>
+        <h1 id="success-title">Password aggiornata!</h1>
+
+        <p id="success-text">Ora puoi tornare all'app e accedere.</p>
+      </section>
     </main>
 
     <script>
-        const SUPABASE_URL =
-            "https://rievhxmavsvnoyormnfq.supabase.co";
+      const SUPABASE_URL = "https://rievhxmavsvnoyormnfq.supabase.co";
 
-        const SUPABASE_KEY =
-            "sb_publishable_DjhuWqEN4s4HXBOLIWHlNg_e5z82-b4";
+      const SUPABASE_KEY = "sb_publishable_DjhuWqEN4s4HXBOLIWHlNg_e5z82-b4";
 
-        const query = new URLSearchParams(
-            window.location.search
-        );
+      // Translations
 
-        const fragment = new URLSearchParams(
-            window.location.hash.substring(1)
-        );
+      const translations = {
+        it: {
+          confirmationTitle: "Email confermata!",
+          confirmationText:
+            "Il tuo account è pronto. Ora puoi tornare all'app e accedere.",
 
-        const accessToken = fragment.get("access_token");
+          resetTitle: "Nuova password",
+          passwordPlaceholder: "Nuova password",
+          confirmationPlaceholder: "Ripeti la nuova password",
+          resetButton: "Salva nuova password",
 
-        const isPasswordReset =
-            query.get("mode") === "password-reset" ||
-            fragment.get("type") === "recovery";
+          mismatch: "Le password non coincidono.",
+          saving: "Salvataggio in corso...",
 
-        const confirmationMessage = document.getElementById(
-            "confirmation-message"
-        );
+          invalidLink: "Link non valido o scaduto. Richiedi una nuova email.",
 
-        const resetForm = document.getElementById(
-            "reset-form"
-        );
+          updateError:
+            "Impossibile aggiornare la password. Richiedi una nuova email e riprova.",
 
-        const status = document.getElementById(
-            "status"
-        );
+          successTitle: "Password aggiornata!",
+          successText: "Ora puoi tornare all'app e accedere.",
+        },
 
-        if (isPasswordReset) {
-            confirmationMessage.style.display = "none";
-            resetForm.style.display = "grid";
+        en: {
+          confirmationTitle: "Email confirmed!",
+          confirmationText:
+            "Your account is ready. You can now return to the app and log in.",
 
-            if (!accessToken) {
-                status.textContent =
-                    "Link non valido o scaduto. Richiedi una nuova email.";
-            }
+          resetTitle: "New password",
+          passwordPlaceholder: "New password",
+          confirmationPlaceholder: "Repeat your new password",
+          resetButton: "Save new password",
+
+          mismatch: "The passwords do not match.",
+          saving: "Saving...",
+
+          invalidLink: "Invalid or expired link. Please request a new email.",
+
+          updateError:
+            "Unable to update your password. Please request a new email and try again.",
+
+          successTitle: "Password updated!",
+          successText: "You can now return to the app and log in.",
+        },
+      };
+
+      let currentLanguage = "it";
+
+      // URL parameters
+
+      const query = new URLSearchParams(window.location.search);
+
+      const fragment = new URLSearchParams(window.location.hash.substring(1));
+
+      const accessToken = fragment.get("access_token");
+
+      const isPasswordReset =
+        query.get("mode") === "password-reset" ||
+        fragment.get("type") === "recovery";
+
+      // DOM elements
+
+      const confirmationMessage = document.getElementById(
+        "confirmation-message",
+      );
+
+      const resetForm = document.getElementById("reset-form");
+
+      const successMessage = document.getElementById("success-message");
+
+      const status = document.getElementById("status");
+
+      // Language selection
+
+      function changeLanguage(language) {
+        currentLanguage = language;
+
+        const t = translations[language];
+
+        document.documentElement.lang = language;
+
+        document
+          .getElementById("lang-it")
+          .classList.toggle("active", language === "it");
+
+        document
+          .getElementById("lang-en")
+          .classList.toggle("active", language === "en");
+
+        document
+          .getElementById("lang-it")
+          .setAttribute("aria-pressed", language === "it");
+
+        document
+          .getElementById("lang-en")
+          .setAttribute("aria-pressed", language === "en");
+
+        document.getElementById("confirmation-title").textContent =
+          t.confirmationTitle;
+
+        document.getElementById("confirmation-text").textContent =
+          t.confirmationText;
+
+        document.getElementById("reset-title").textContent = t.resetTitle;
+
+        document.getElementById("password").placeholder = t.passwordPlaceholder;
+
+        document.getElementById("password-confirmation").placeholder =
+          t.confirmationPlaceholder;
+
+        document.getElementById("reset-button").textContent = t.resetButton;
+
+        document.getElementById("success-title").textContent = t.successTitle;
+
+        document.getElementById("success-text").textContent = t.successText;
+
+        if (status.dataset.message) {
+          status.textContent = t[status.dataset.message];
+        }
+      }
+
+      // Initialize password reset mode
+
+      if (isPasswordReset) {
+        confirmationMessage.style.display = "none";
+
+        resetForm.style.display = "flex";
+
+        if (!accessToken) {
+          status.dataset.message = "invalidLink";
+
+          status.textContent = translations[currentLanguage].invalidLink;
+        }
+      }
+
+      // Password reset submission
+
+      resetForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const t = translations[currentLanguage];
+
+        const password = document.getElementById("password").value;
+
+        const confirmation = document.getElementById(
+          "password-confirmation",
+        ).value;
+
+        if (!accessToken) {
+          status.dataset.message = "invalidLink";
+          status.textContent = t.invalidLink;
+
+          return;
         }
 
-        resetForm.addEventListener(
-            "submit",
-            async (event) => {
-                event.preventDefault();
+        if (password !== confirmation) {
+          status.dataset.message = "mismatch";
+          status.textContent = t.mismatch;
 
-                const password = document.getElementById(
-                    "password"
-                ).value;
+          return;
+        }
 
-                const confirmation = document.getElementById(
-                    "password-confirmation"
-                ).value;
+        status.dataset.message = "saving";
+        status.textContent = t.saving;
 
-                if (password !== confirmation) {
-                    status.textContent =
-                        "Le password non coincidono.";
-                    return;
-                }
+        try {
+          const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+            method: "PUT",
 
-                status.textContent =
-                    "Salvataggio in corso...";
+            headers: {
+              apikey: SUPABASE_KEY,
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
 
-                try {
-                    const response = await fetch(
-                        `${SUPABASE_URL}/auth/v1/user`,
-                        {
-                            method: "PUT",
-                            headers: {
-                                "apikey": SUPABASE_KEY,
-                                "Authorization":
-                                    `Bearer ${accessToken}`,
-                                "Content-Type":
-                                    "application/json"
-                            },
-                            body: JSON.stringify({
-                                password: password
-                            })
-                        }
-                    );
+            body: JSON.stringify({
+              password: password,
+            }),
+          });
 
-                    if (!response.ok) {
-                        throw new Error(
-                            "Password update failed"
-                        );
-                    }
+          if (!response.ok) {
+            throw new Error("Password update failed");
+          }
 
-                    resetForm.innerHTML = `
-                        <h1>Password aggiornata!</h1>
-                        <p>
-                            Ora puoi tornare all'app
-                            e accedere.
-                        </p>
-                    `;
+          resetForm.style.display = "none";
 
-                    window.history.replaceState(
-                        {},
-                        document.title,
-                        window.location.pathname
-                    );
-                } catch (error) {
-                    status.textContent =
-                        "Impossibile aggiornare la password. " +
-                        "Richiedi una nuova email e riprova.";
-                }
-            }
-        );
+          successMessage.hidden = false;
+
+          // Remove authentication tokens from the URL
+
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname,
+          );
+        } catch (error) {
+          status.dataset.message = "updateError";
+
+          status.textContent = translations[currentLanguage].updateError;
+        }
+      });
     </script>
-</body>
-
+  </body>
 </html>
